@@ -2,8 +2,8 @@ package com.asset.asset_tracking.controller;
 
 import com.asset.asset_tracking.model.Asset;
 import com.asset.asset_tracking.service.AssetService;
-import com.asset.asset_tracking.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,30 +15,31 @@ public class AssetController {
     private final AssetService assetService;
 
     @PostMapping
-    public Asset create(@RequestBody Asset asset){
-        return assetService.createAsset(asset);
+    public ResponseEntity<Asset> create(@RequestBody Asset asset) {
+        Asset created = assetService.createAsset(asset);
+        return ResponseEntity.status(201).body(created);
     }
 
     @GetMapping
-    public List<Asset> getAssets(){
-        return assetService.getAllAssets();
+    public ResponseEntity<List<Asset>> getAssets() {
+        return ResponseEntity.ok(assetService.getAllAssets());
     }
 
     @GetMapping("/{id}")
-    public Asset getById(@PathVariable long id){
-        return assetService.getAssetById(id);
+    public ResponseEntity<Asset> getById(@PathVariable long id) {
+        return ResponseEntity.ok(assetService.getAssetById(id));
     }
 
     @PatchMapping("/{id}")
-    public Asset update(
+    public ResponseEntity<Asset> update(
             @PathVariable long id,
-            @RequestBody Asset asset){
-
-        return assetService.updateAsset(id, asset);
+            @RequestBody Asset asset) {
+        return ResponseEntity.ok(assetService.updateAsset(id, asset));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id){
+    public ResponseEntity<String> delete(@PathVariable long id) {
         assetService.softDelete(id);
+        return ResponseEntity.ok("Asset deleted successfully");
     }
 }
